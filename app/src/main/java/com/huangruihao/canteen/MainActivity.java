@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.Objects;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,22 +24,48 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final String[] canteens = {"桃李1层", "桃李2层", "桃李3层", "紫荆1层", "紫荆2层", "紫荆3层", "紫荆4层",
-                "桃李地下1层", "紫荆地下1层", "芝兰1层", "芝兰2层", "玉树1层", "玉树2层", "观畴",
-                "清芬2层", "清芬3层", "轻轻快餐", "听涛", "澜园", "荷园"};
-        final Random r = new Random();
+        final Object[] canteensWithProbability = {
+                "桃李1层",     10,
+                "桃李2层",     1,
+                "桃李3层",     1,
+                "紫荆1层",     10,
+                "紫荆2层",     1,
+                "紫荆3层",     1,
+                "紫荆4层",     10,
+                "桃李地下1层", 1,
+                "紫荆地下1层", 1,
+                "芝兰1层",     1,
+                "芝兰2层",     1,
+                "玉树1层",     1,
+                "玉树2层",     1,
+                "观畴",        1,
+                "清芬2层",     1,
+                "清芬3层",     1,
+                "轻轻快餐",    1,
+                "听涛",        0,
+                "澜园",        1,
+                "荷园",        1
+        };
+        final RouletteRandom r = RouletteRandom.fromAssociatedArray(canteensWithProbability);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int index = r.nextInt(canteens.length);
-                TextView canteen = (TextView)findViewById(R.id.canteen);
-                canteen.setText(canteens[index]);
-                Snackbar.make(view, "选择成功", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        // prevent fab from raising NullPointerException
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String canteenName = (String) r.choose();
+                    TextView canteen = (TextView) findViewById(R.id.canteen);
+                    Calendar c = Calendar.getInstance();
+                    int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+                    if (dayOfWeek == 5) // Thursday
+                        canteenName = "桃李地下1层";
+                    canteen.setText(canteenName);
+                    Snackbar.make(view, "选择成功", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
+        }
     }
 
     @Override
