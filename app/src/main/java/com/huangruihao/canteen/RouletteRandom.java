@@ -8,12 +8,12 @@ import java.util.Random;
  * class RouletteRandom
  * Created by alexwang(ice_b0und@hotmail.com) on Thursday, 2016-05-19 19:21.
  *
- * Generate a random selector by an array of associated doubles and objects.
+ * Generate a mRandom selector by an array of associated doubles and objects.
  *
  */
 public class RouletteRandom<T> {
     /**
-     * Generate a new random selector by objects and probabilities.
+     * Generate a new mRandom selector by objects and probabilities.
      * Note: probabilities may not sum to 1.0, and the size of the two parameters must be the same
      * @param objects: the objects to choose
      * @param probabilities: the "probability" of objects

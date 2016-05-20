@@ -1,5 +1,9 @@
 package com.huangruihao.canteen;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,10 +16,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
-import java.util.Objects;
-import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
+
+    RouletteRandom mRandom;
+    TextView mTextCanteen;
+    Sensor mAccelerometer;
+    SensorManager mSensorManager;
+    long mSensorLastUpdated = 0;
+    double mSensorEventLastX, mSensorEventLastY, mSensorEventLastZ;
+    double SHAKE_THRESHOLD = 800;
+
+    private void nextCanteen() {
+        String canteenName = (String) mRandom.choose();
+        Calendar c = Calendar.getInstance();
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        if (dayOfWeek == 5) // Thursday
+            canteenName = "桃李地下1层";
+        mTextCanteen.setText(canteenName);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,26 +65,37 @@ public class MainActivity extends AppCompatActivity {
                 "澜园",        1,
                 "荷园",        1
         };
-        final RouletteRandom r = RouletteRandom.fromAssociatedArray(canteensWithProbability);
+        mRandom = RouletteRandom.fromAssociatedArray(canteensWithProbability);
 
+        mTextCanteen = (TextView) findViewById(R.id.canteen);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         // prevent fab from raising NullPointerException
         if (fab != null) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String canteenName = (String) r.choose();
-                    TextView canteen = (TextView) findViewById(R.id.canteen);
-                    Calendar c = Calendar.getInstance();
-                    int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-                    if (dayOfWeek == 5) // Thursday
-                        canteenName = "桃李地下1层";
-                    canteen.setText(canteenName);
+                    nextCanteen();
                     Snackbar.make(view, "选择成功", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             });
         }
+
+        // initialize shaker sensor
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
     }
 
     @Override
@@ -88,5 +118,42 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor == mAccelerometer) {
+            long curTime = System.currentTimeMillis();
+            // only allow one update every 100ms.
+            if ((curTime - mSensorLastUpdated) > 200) {
+                long diffTime = (curTime - mSensorLastUpdated);
+                mSensorLastUpdated = curTime;
+
+                double x, y, z;
+                x = event.values[0];
+                y = event.values[1];
+                z = event.values[2];
+
+                double gForce = Math.sqrt(
+                        (x - mSensorEventLastX) * (x- mSensorEventLastX) +
+                        (y - mSensorEventLastY) * (y- mSensorEventLastY) +
+                        (z - mSensorEventLastZ) * (z- mSensorEventLastZ)
+                );
+
+                if (gForce > 9.8 * 2.5) {
+                    //Log.d("sensor", "shake detected w/ speed: " + accRate);
+                    Toast.makeText(this, "shake detected acc: " + gForce, Toast.LENGTH_SHORT).show();
+                    nextCanteen();
+                }
+
+                mSensorEventLastX = x;
+                mSensorEventLastY = y;
+                mSensorEventLastZ = z;
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 }
