@@ -15,9 +15,10 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.huangruihao.canteen.strategy.CanteenSelector;
-import com.huangruihao.canteen.strategy.DinnerStrategy;
-import com.huangruihao.canteen.strategy.DormitoryNearbyStrategy;
-import com.huangruihao.canteen.strategy.Strategy;
+import com.huangruihao.canteen.strategy.DinnerRandomStrategy;
+import com.huangruihao.canteen.strategy.DormitoryNearbyRandomStrategy;
+import com.huangruihao.canteen.strategy.PreferedStrategy;
+import com.huangruihao.canteen.strategy.RandomStrategy;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mCanteenSelector = new Strategy();
+        mCanteenSelector = new PreferedStrategy();
 
         mTextCanteen = (TextView) findViewById(R.id.canteen);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -76,29 +77,36 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_select_strategy, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_default) {
-            mCanteenSelector = new Strategy();
+            mCanteenSelector = new PreferedStrategy();
+            mTextCanteen.setText(String.format("%s\n%s",
+                    getString(R.string.what_do_we_eat), getString(R.string.action_default)));
             return true;
         }
         else if (id == R.id.action_dormitory_nearby) {
-            mCanteenSelector = new DormitoryNearbyStrategy();
+            mCanteenSelector = new DormitoryNearbyRandomStrategy();
+            mTextCanteen.setText(String.format("%s\n%s",
+                    getString(R.string.what_do_we_eat), getString(R.string.action_dormitory_nearby)));
             return true;
         }
         else if (id == R.id.action_dinner) {
-            mCanteenSelector = new DinnerStrategy();
+            mCanteenSelector = new DinnerRandomStrategy();
+            mTextCanteen.setText(String.format("%s\n%s",
+                    getString(R.string.what_do_we_eat), getString(R.string.action_dinner)));
+            return true;
+        }
+        else if (id == R.id.action_completely_random) {
+            mCanteenSelector = new RandomStrategy();
+            mTextCanteen.setText(String.format("%s\n%s",
+                    getString(R.string.what_do_we_eat), getString(R.string.action_completely_random)));
             return true;
         }
 

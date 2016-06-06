@@ -3,4 +3,7 @@
     <string name="action_default">默认</string>
     <string name="action_dormitory_nearby">宿舍附近</string>
     <string name="action_dinner">来顿大餐</string>
+    <string name="action_completely_random">听天由命</string>
+    <string name="what_do_we_eat">吃什么?</string>
+
 </resources>

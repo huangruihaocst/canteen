@@ -7,7 +7,7 @@ import java.util.Calendar;
 /**
  * Created by alexwang on 6/6/16.
  */
-public class Strategy implements CanteenSelector {
+public class RandomStrategy implements CanteenSelector {
     String TAOLI_B1 = "紫荆地下1层";
     String TAOLI_1 = "桃李1层";
     String TAOLI_2 = "桃李2层";
@@ -31,14 +31,14 @@ public class Strategy implements CanteenSelector {
     public Object[] getCanteensWithProbability() {
         return new Object[] {
                 TAOLI_B1,      1,
-                TAOLI_1,       10,
+                TAOLI_1,       1,
                 TAOLI_2,       1,
                 TAOLI_3,       1,
                 ZIJING_B1,     1,
-                ZIJING_1,     10,
+                ZIJING_1,      1,
                 ZIJING_2,      1,
                 ZIJING_3,      1,
-                ZIJING_4,     10,
+                ZIJING_4,      1,
                 ZHILAN_1,      1,
                 ZHILAN_2,      1,
                 YUSHU_1,       1,

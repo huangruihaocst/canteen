@@ -17,5 +17,7 @@
         android:layout_height="wrap_content"
         android:text="吃什么？"
         android:id="@+id/canteen"
-        android:textSize="50sp"/>
+        android:textSize="50sp"
+        android:maxLines="4"
+        android:lines="2" />
 </RelativeLayout>

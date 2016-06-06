@@ -3,7 +3,7 @@ package com.huangruihao.canteen.strategy;
 /**
  * Created by alexwang on 6/6/16.
  */
-public class DinnerStrategy extends Strategy {
+public class DinnerRandomStrategy extends RandomStrategy {
     public Object[] getCanteensWithProbability() {
         return new Object[] {
                 TAOLI_B1,      1,

@@ -3,7 +3,7 @@ package com.huangruihao.canteen.strategy;
 /**
  * Created by alexwang on 6/6/16.
  */
-public class DormitoryNearbyStrategy extends Strategy {
+public class DormitoryNearbyRandomStrategy extends RandomStrategy {
     @Override
     public Object[] getCanteensWithProbability() {
         return new Object[] {
