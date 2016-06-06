@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Canteen</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_default">默认</string>
+    <string name="action_dormitory_nearby">宿舍附近</string>
+    <string name="action_dinner">来顿大餐</string>
 </resources>
