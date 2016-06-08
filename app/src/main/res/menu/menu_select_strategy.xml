@@ -22,4 +22,14 @@
         android:orderInCategory="102"
         android:title="@string/action_completely_random"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_update"
+        android:orderInCategory="200"
+        android:title="@string/action_update"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_check_update"
+        android:orderInCategory="200"
+        android:title="@string/action_check_update"
+        app:showAsAction="never" />
 </menu>
