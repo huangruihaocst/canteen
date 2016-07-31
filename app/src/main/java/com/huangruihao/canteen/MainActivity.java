@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -23,6 +24,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.huangruihao.canteen.databinding.ActivityMainBinding;
 import com.huangruihao.canteen.strategy.CanteenSelector;
 import com.huangruihao.canteen.strategy.DinnerRandomStrategy;
 import com.huangruihao.canteen.strategy.DormitoryNearbyRandomStrategy;
@@ -44,17 +46,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     SensorManager mSensorManager;
     long mSensorLastUpdated = 0;
     double mSensorEventLastX, mSensorEventLastY, mSensorEventLastZ;
+    Canteen mCurrentCanteen;
 
     UpdateManager updateManager;
 
     private void chooseCanteen() {
-        mTextCanteen.setText(mCanteenSelector.getCanteen());
+        mCurrentCanteen.name.set(mCanteenSelector.getCanteen());
+//        binding.setCanteen(mCurrentCanteen);
     }
-
+    ActivityMainBinding binding;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mCurrentCanteen = new Canteen("吃什么??");
+        binding.setCanteen(mCurrentCanteen);
+        //setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
